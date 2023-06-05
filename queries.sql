@@ -15,26 +15,38 @@ UPDATE table animals SET species = 'digimon' WHERE name like '%mon';
 
 UPDATE table animals SET species = 'pokemon' WHERE species = null;
 
-DELETE * FROM animals WHERE date_of_birth > '2022-01-01';
+BEGIN TRANSACTION;
+DELETE FROM animals;
 
-UPDATE * animals SET weight_kg * -1;
+ROLLBACK;
 
-UPDATE * animals SET weight_kg * -1 WHERE weight_kg < 0;
+SELECT FROM animals;
+
+BEGIN TRANSACTION;
+
+DELETE FROM animals WHERE date_of_birth > '2022-01-01';
+
+SAVEPOINT SV1;
+
+UPDATE animals SET weight_kg = weight_kg * -1;
+
+ROLLBACK TO SV1;
+
+UPDATE animals SET weight_kg = weight_kg * -1 WHERE weight_kg < 0;
+
+COMMIT;
 
 --count
 
 SELECT COUNT(*) FROM animals; 
 
-SELECT COUNT(*) FROM animals WHERE escape_attempts =< 0;
+SELECT COUNT(*) FROM animals WHERE escape_attempts = 0;
 
 SELECT AVG(weight_kg) FROM animals;
 
---WHO escapes the most, neutured or not neutered
 
-SELECT escape_attempts, COUNT(*) FROM animals GROUP BY neutered = true GROUP BY neutered = false;
+SELECT neutered, SUM(escape_attempts) FROM animals GROUP BY neutered;
 
-SELECT MIN(weight_kg) FROM animals WHERE species = 'pokemon' && species = 'digimon';
+SELECT species, MIN(weight_kg), MAX(weight_kg) FROM animals GROUP BY species;
 
-SELECT MAX(weight_kg) FROM animals WHERE species = 'pokemon' && species = 'digimon';
-
-SELECT AVG(escape_attempts) FROM animals WHERE species = 'pokemon' && species = 'digimon' GROUP BY date_of_birth BETWEEN 'Jan 1, 1990' AND 'Dec 31, 2000';
+SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN 'Jan 1, 1990' AND 'Dec 31, 2000' GROUP BY species;
