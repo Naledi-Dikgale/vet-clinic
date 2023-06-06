@@ -44,22 +44,19 @@ INSERT INTO species (name) VALUES
   ('Digimon');
 
 -- Modify to include species_id
-UPDATE animals
-SET species_id = (
-  CASE
-    WHEN name LIKE '%mon' THEN (SELECT id FROM species WHERE name = 'Digimon')
-    ELSE (SELECT id FROM species WHERE name = 'Pokemon')
-  END
-);
+BEGIN;
+UPDATE animals SET species_id = 2 WHERE name LIKE '%mon';
+UPDATE animals SET species_id = 1 WHERE species_id IS NULL;
+COMMIT;
+SELECT * FROM animals;
+
 
 -- Modify to include owner_id
-UPDATE animals
-SET owner_id = (
-  CASE
-    WHEN name = 'Agumon' THEN (SELECT id FROM owners WHERE full_name = 'Sam Smith')
-    WHEN name IN ('Gabumon', 'Pikachu') THEN (SELECT id FROM owners WHERE full_name = 'Jennifer Orwell')
-    WHEN name IN ('Devimon', 'Plantmon') THEN (SELECT id FROM owners WHERE full_name = 'Bob')
-    WHEN name IN ('Charmander', 'Squirtle', 'Blossom') THEN (SELECT id FROM owners WHERE full_name = 'Melody Pond')
-    WHEN name IN ('Angemon', 'Boarmon') THEN (SELECT id FROM owners WHERE full_name = 'Dean Winchester')
-  END
-);
+BEGIN;
+UPDATE animals SET owner_id = 1 WHERE name IN ('Agumon');
+UPDATE animals SET owner_id = 2 WHERE name IN ('Gabumon', 'Pikachu');
+UPDATE animals SET owner_id = 3 WHERE name IN ('Devimon', 'Plantmon');
+UPDATE animals SET owner_id = 4 WHERE name IN ('Charmander', 'Squirtle', 'Blossom');
+UPDATE animals SET owner_id = 5 WHERE name IN ('Angemon', 'Boarmon');
+COMMIT;
+SELECT * FROM animals;
