@@ -109,7 +109,7 @@ JOIN vets
 ON vets.id = visits.vet_id
 WHERE vets.name = 'Stephanie Mendez' AND visits.date BETWEEN '2020-04-01' AND '2020-08-30';
 
-SELECT animals.name, COUNT(visits.animal_id) AS VISITS
+SELECT COUNT(visits.animal_id) AS VISITS
 FROM animals
 JOIN visits
 ON animals.id = visits.animal_id
